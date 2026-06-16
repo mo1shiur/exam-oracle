@@ -1,10 +1,7 @@
-node_modules/
 *.log
-.env
 .DS_Store
-dist/
-build/
-data/
-uploads/
-*.db
-*.sqlite
+.idea/
+.vscode/
+node_modules/
+.env
+.env.local

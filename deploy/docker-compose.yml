@@ -1,0 +1,44 @@
+# Run the whole stack locally with one command.
+#   docker compose -f deploy/docker-compose.yml up --build
+#
+# Then open http://localhost:8080
+
+services:
+  backend:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile.backend
+    container_name: exam-oracle-backend
+    ports:
+      - "4000:4000"
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      JWT_SECRET: ${JWT_SECRET:-please-change-this-in-production}
+      CORS_ORIGIN: http://localhost:8080
+      LLM_PROVIDER: ${LLM_PROVIDER:-groq}
+      LLM_API_KEY: ${LLM_API_KEY:-}
+      LLM_MODEL: ${LLM_MODEL:-llama-3.1-70b-versatile}
+      DATA_DIR: /app/data
+      UPLOAD_DIR: /app/uploads
+    volumes:
+      - backend-data:/app/data
+      - backend-uploads:/app/uploads
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile.frontend
+      args:
+        VITE_API_TARGET: http://localhost:4000
+    container_name: exam-oracle-frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  backend-data:
+  backend-uploads:
