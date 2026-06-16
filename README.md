@@ -2,6 +2,11 @@
 
 > Predict what your teacher will ask — by studying both your materials *and* their question style.
 
+[![CI](https://github.com/YOUR_USERNAME/exam-oracle/actions/workflows/ci.yml/badge.svg)](https://github.com/YOUR_USERNAME/exam-oracle/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
+![Node](https://img.shields.io/badge/node-%E2%89%A518.17-brightgreen)
+![Languages](https://img.shields.io/badge/i18n-EN%20%7C%20BN%20%7C%20ZH-blue)
+
 Upload your study notes (PDFs, images, Word, text) and any sample questions / suggestions from your teacher. Exam Oracle profiles the teacher's style, extracts the topics that actually matter, and generates realistic predicted questions in the same language — English, Bengali, or Chinese (auto-detected).
 
 Includes a **Study Mode** (questions + answers) and auto-generated **Flashcards** so you can actually learn, not just guess.

@@ -1,0 +1,71 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  backend:
+    name: Backend (Node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [18, 20]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+      - name: Install
+        working-directory: backend
+        run: npm ci
+      - name: Syntax check
+        working-directory: backend
+        run: |
+          for f in $(find src -name '*.js'); do node --check "$f" || exit 1; done
+      - name: Boot smoke test
+        working-directory: backend
+        env:
+          JWT_SECRET: ci-test-secret
+          LLM_API_KEY: ci-test-key
+          LLM_PROVIDER: groq
+        run: |
+          node src/server.js &
+          SERVER_PID=$!
+          sleep 2
+          curl -sf http://localhost:4000/api/health | tee /tmp/health.json
+          test "$(jq -r .ok /tmp/health.json)" = "true"
+          kill $SERVER_PID
+
+  frontend:
+    name: Frontend (Node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [18, 20]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Install
+        working-directory: frontend
+        run: npm ci
+      - name: Build
+        working-directory: frontend
+        run: npm run build
+      - name: Upload dist artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dist-node${{ matrix.node }}
+          path: frontend/dist
