@@ -28,6 +28,8 @@ Includes a **Study Mode** (questions + answers) and auto-generated **Flashcards*
 
 ## 🏃 Run it locally (5 minutes)
 
+> 🆘 **Stuck?** See [RUNBOOK.md](./RUNBOOK.md) for a step-by-step with troubleshooting.
+
 ### Prerequisites
 - **Node.js 18.17+** (20 LTS recommended) — https://nodejs.org
 - An LLM API key (see below)
